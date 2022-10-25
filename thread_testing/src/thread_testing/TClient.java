@@ -26,7 +26,7 @@ public class TClient {
 		jFrame.setSize(500, 500);
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		ImageIcon imageIcon = new ImageIcon("src\\pinhead.png");
+		ImageIcon imageIcon = new ImageIcon("src\\legoshi.png");
 		
 		
 		JLabel jLabelPic = new JLabel(imageIcon);
