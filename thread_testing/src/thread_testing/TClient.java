@@ -19,7 +19,7 @@ public class TClient {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		// The IP for my laptop is 192.168.1.16
-		Socket socket = new Socket("192.168.1.16", 5000);
+		Socket socket = new Socket("localhost", 5000);
 		System.out.println("Connected to server.");
 		
 		JFrame jFrame = new JFrame("Client - 1");
