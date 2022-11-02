@@ -10,10 +10,14 @@ import java.awt.image.Kernel;
 
 class TWorker implements Runnable 
 { 
+	 // Local variables
      Image imageHalf = null;
      Image processedHalf = null;
      char option;
     
+    // Get the RGB value for each pixel then subtact each from 255
+    // The resulting RGB values will equal the inverse of the color
+    // Do this for every pixel, one at a time
     public static Image invertImage(Image image) {
 		for (int x = 0; x < image.getWidth(null); x++) {
 			for(int y = 0; y < image.getHeight(null); y++) {
@@ -30,6 +34,10 @@ class TWorker implements Runnable
 		return image;
 	}
 	
+    
+    // Get the RGB values for each pixel and multiply each by a certain decimal, the 3 decimals = 1
+    // Add all three multiplied numbers together, they will never exceed 255 since our factors equaled 1
+    // The closer the three values are together the more gray something is, so having all of them be the same = gray
 	public static Image grayImage(Image image) {
 		for(int x = 0; x < image.getWidth(null); x++) {
 			for(int y = 0; y < image.getHeight(null); y++) {
@@ -47,6 +55,9 @@ class TWorker implements Runnable
 		return image;
 	}
 	
+	// Increase satruation by removing gray from the image pixel by pixel
+	// Do this by finding the lowest RGB value for each pixel and subtracting the lowest from the other two, and itself
+	// One RGB value will end up being 0
 	public static Image satUp(Image image) {
 		for(int x = 0; x < image.getWidth(null); x++) {
 			for(int y = 0; y < image.getHeight(null); y++) {
@@ -79,6 +90,10 @@ class TWorker implements Runnable
 		return image;
 	}
 	
+	
+	// Decrease saturation by adding gray to an image pixel by pixel
+	// Do this by making all the RGB values closer together by finding the average and- 
+	// -increasing/decreasing the values by half of the difference between the current valUe and the mean
 	public static Image satDown(Image image) {
 		for(int x = 0; x < image.getWidth(null); x++) {
 			for(int y = 0; y < image.getHeight(null); y++) {
@@ -112,6 +127,9 @@ class TWorker implements Runnable
 		return image;
 	}
 	
+	
+	// Use a Kernel and a ConvolveOp to apply a filter to an image using a flout[]
+	// This array will be set so that each surrounding pixel color relative to the selected pixel, making the image sharper
 	public static Image sharpen(Image image) {
 		
 		final float[] SHARPEN3x3 = {0.f, -1.f, 0.f,
@@ -126,6 +144,10 @@ class TWorker implements Runnable
 		return image;
 	}
 	
+	// Use a kernel and a ConvolveOp to apply a filer to an image using a flout[]
+	// This array will be set so each surrounding pixel color is relative to the selected pixel, makind the image blur
+	// This causes notable "but blurred" along the images and in the middle
+	// I've left this in to demonstate that the image actually does get split into two
 	public static Image blur(Image image) {
 		int radius = 1;
 		int size = radius * 4 + 3;
@@ -144,39 +166,44 @@ class TWorker implements Runnable
 		return blurred;
 	}
 	
+	// A method that can be called to get the processed half of an image from the Worker
 	public Image getImage() {
 		return this.imageHalf;
 	}
 	
+	// Constructor
 	public TWorker(Image image, char option) {
 		this.imageHalf  = image;
 		this.option = option;
 	}
 	
+	// The main method in Runnable classes
 	public void run() {
 		
+		
+		// Switch that reads which ever option was recieved and executes the appropriate method
 		switch (option) {
-		case '1': System.out.println("Image will be set to gray-scale");
+		case '1': System.out.println("[TWorker] Image half will be set to gray-scale");
 				  imageHalf = grayImage(imageHalf);
 				  break;
-		case '2': System.out.println("Image will have its colors inverted");
+		case '2': System.out.println("[TWorker] Image half will have its colors inverted");
 				  imageHalf = invertImage(imageHalf);
 				  break;
-		case '3': System.out.println("Image will be sharpened");
+		case '3': System.out.println("[TWorker] Image half will be sharpened");
 				  imageHalf = sharpen(imageHalf);
 				  break;
-		case '4': System.out.println("Image will made blurry");
+		case '4': System.out.println("[TWorker] Image half will made blurry");
 				  imageHalf = blur(imageHalf);
 				  break;
-		case '5': System.out.println("Image will have its saturation increased");
+		case '5': System.out.println("[TWorker] Image half will have its saturation increased");
 				  imageHalf = satUp(imageHalf);
 				  break;
-		case '6': System.out.println("Image will have its saturation decreased");
+		case '6': System.out.println("[TWorker] Image half will have its saturation decreased");
 				  imageHalf = satDown(imageHalf);
 				  break;
-		default:  System.out.println("You messed up.");
-		
-		System.out.println("Print statement at the end of TWorker");
+		// This should never print, but it let's us know if somehow an invalid option gets passed
+		default:  System.out.println("[TWorker] You messed up.");
+
 	}
 		
 		
